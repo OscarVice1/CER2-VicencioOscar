@@ -1,0 +1,116 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+
+<section class="container-fluid py-5 bg-black" id="hero">
+    {% if evento_proximo_main %}
+    <div class="row align-items-center justify-content-center">
+
+        <div class="col-12 col-md-6 col-lg-12 text-center p-5">
+            <h1 class="display-1 text-info">En vivo <span class="nombre-artista fw-bolder">
+                    {{evento_proximo_main.titulo}}</span></h1>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-12 d-lg-flex justify-content-center">
+            <img src="{{ evento_proximo_main.imagen_banner.url }}" class="img-fluid"
+                alt="{{ evento_proximo_main.titulo }}">
+        </div>
+
+        <div id="countdown" class="row justify-content-center"
+            data-fecha-evento="{{ evento_proximo_main.fecha_hora.isoformat }}">
+
+            <div class="col-6 col-md-3 mb-2">
+                <div class="card bg-black text-white p-3 text-center">
+                    <h2 id="days" class="fs-1">00</h2>
+                    <p class="fs-6 m-auto">Días</p>
+                </div>
+            </div>
+            <div class="col-6 col-md-3 mb-2">
+                <div class="card bg-black  text-white p-3 text-center">
+                    <h2 id="hours" class="fs-1">00</h2>
+                    <p class="fs-6 m-auto">Horas</p>
+                </div>
+            </div>
+            <div class="col-6 col-md-3 mb-2">
+                <div class="card bg-black text-white p-3 text-center">
+                    <h2 id="minutes" class="fs-1">00</h2>
+                    <p class="fs-6 m-auto ">Minutos</p>
+                </div>
+            </div>
+            <div class="col-6 col-md-3 mb-2">
+                <div class="card bg-black text-white p-3 text-center">
+                    <h2 id="seconds" class="fs-1">00</h2>
+                    <p class="fs-6 m-auto">Segundos</p>
+                </div>
+            </div>
+        </div>
+
+        <p class="text-center">
+            <a class="btn btn-outline-info text-light" data-bs-toggle="collapse" href="#collapseHero" role="button"
+                aria-expanded="false" aria-controls="collapseHero ">
+                Más información
+            </a>
+        </p>
+        <div id="comenzo" class="text-center text-light mt-2"></div>
+        <div class="collapse" id="collapseHero">
+            <div class="card card-body bg-dark text-light mx-auto" style="width: 300px;">
+                <p class="mb-1"><strong>Costo entrada:</strong> ${{ evento_proximo_main.valor }} pesos</p>
+                <p class="mb-1"><strong>Lugar:</strong> {{ evento_proximo_main.lugar }}</p>
+                <p class="mb-1"><strong>Fecha del evento:</strong> {{ evento_proximo_main.fecha_hora|date:"Y-m-d" }}</p>
+                <p class="mb-1"><strong>Hora del evento:</strong> {{ evento_proximo_main.fecha_hora|time:"H:i" }}</p>
+                <p class="card-text"><strong>Plazas:</strong> {{ evento_proximo_main.plazas_disponibles }}</p>
+                {% if user.is_authenticated %}
+                <a href="{% url 'inscribir_evento' evento_proximo_main.id %}" class="btn btn-primary">Inscribirse</a>
+                {% else %}
+                <a href="{% url 'registrar_usuario' %}" class="btn btn-outline-primary">Regístrate para
+                    inscribirte</a>
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+    {% else %}
+    <div class="row justify-content-center text-white">
+        <div class="col-12 text-center p-5">
+            <h1 class="display-4 text-danger">No hay eventos próximos disponibles.</h1>
+        </div>
+    </div>
+    {% endif %}
+</section>
+
+<section class="container-fluid p-5 bg-dark-subtle" id="eventos">
+    <h3>Próximos Eventos</h3>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+
+        {% for evento in eventos %}
+        <div class="col">
+            <div class="card">
+                <img src="{{ evento.imagen_tarjeta.url }}" class="card-img-top" alt="{{ evento.titulo }}">
+
+                <div class="card-body">
+                    <h5 class="card-title">{{ evento.titulo }}</h5>
+                    <p class="card-text"><strong>Valor:</strong> ${{ evento.valor }}</p>
+                    <p class="card-text"><strong>Fecha:</strong> {{ evento.fecha_hora|date:"Y-m-d" }}</p>
+                    <p class="card-text"><strong>Hora:</strong> {{ evento.fecha_hora|time:"H:i" }}</p>
+                    <p class="card-text"><strong>Lugar:</strong> {{ evento.lugar }}</p>
+                    <p class="card-text"><strong>Plazas:</strong> {{ evento.plazas_disponibles }}</p>
+
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'inscribir_evento' evento.id %}" class="btn btn-primary">Inscribirse</a>
+                    {% else %}
+                    <a href="{% url 'registrar_usuario' %}" class="btn btn-outline-primary">Regístrate para
+                        inscribirte</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 bg">
+            <p>No hay más eventos programados por el momento.</p>
+        </div>
+        {% endfor %}
+
+    </div>
+</section>
+
+{% endblock %}

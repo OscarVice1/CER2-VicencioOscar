@@ -1,0 +1,14 @@
+.nombre-artista {
+    color: #fff;
+    text-shadow:
+        0 0 10px rgb(52, 60, 167),
+        0 0 30px rgb(19, 14, 68),
+        0 0 5px rgb(12, 25, 212),
+        0 0 6px rgba(1, 2, 94, 0.808),
+        0 0 10px rgb(2, 41, 17);
+}
+
+.textarea {
+    resize: none;
+
+}

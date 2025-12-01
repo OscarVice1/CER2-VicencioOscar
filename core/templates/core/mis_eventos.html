@@ -1,0 +1,39 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="container p-5">
+    <h2>Mis Eventos</h2>
+    <hr>
+
+    {% if inscripciones %}
+    <div class="list-group">
+        {% for inscripcion in inscripciones %}
+        <div class="list-group-item list-group-item-action flex-column align-items-start mb-3">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">{{ inscripcion.evento.titulo }}</h5>
+            </div>
+            <p class="mb-1">
+                Fecha del evento: {{ inscripcion.evento.fecha_hora|date:"d/m/Y" }} a las
+                {{ inscripcion.evento.fecha_hora|time:"H:i" }} hrs.
+            </p>
+            <p class="mb-1">Lugar: {{ inscripcion.evento.lugar }}</p>
+            <small>Valor: ${{ inscripcion.evento.valor }}</small>
+
+            {% if inscripcion.evento.fecha_hora > now %}
+            <form action="{% url 'anular_inscripcion' inscripcion.id%}" method="post" class="mt-2">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger btn-sm">Anular Inscripción</button>
+            </form>
+            {% else %}
+            <p class="p text-danger"> Evento acabado</p>
+            {%endif%}
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p>Aún no te has inscrito a ningún evento.</p>
+    <a href="{% url 'mostrar_eventos' %}" class="btn btn-primary">Ver eventos disponibles</a>
+    {% endif %}
+
+</div>
+{% endblock %}
